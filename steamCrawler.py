@@ -21,6 +21,8 @@ achievementsPercentage = api.call('ISteamUserStats.GetGlobalAchievementPercentag
 
 OwnedGames = api.call('IPlayerService.GetOwnedGames', steamid=steamID, include_appinfo=False, include_played_free_games=True, appids_filter=0)
 
+friendList = api.call('ISteamUser.GetFriendList', steamid=steamID)
+
 playerSummary = api.call('ISteamUser.GetPlayerSummaries', steamids=steamID)
 
 #app list
