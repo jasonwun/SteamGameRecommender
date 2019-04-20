@@ -12,6 +12,10 @@ hdlr.setFormatter(formatter)
 log.addHandler(hdlr) 
 log.setLevel(logging.INFO)
 
+#check point
+last_appid = 355100
+last_index = -1
+
 with open ('gamelist.json', 'a') as f:
     #app list
     res = requests.get('http://api.steampowered.com/ISteamApps/GetAppList/v2')
@@ -19,7 +23,12 @@ with open ('gamelist.json', 'a') as f:
     with open ('applist.json', 'w') as fapps:
         json.dump(applist, fapps, indent = 2)
 
-    for index,items in enumerate(applist):
+    for index, items in enumerate(applist):
+        if items['appid'] == last_appid:
+            last_index = index
+    for index, items in enumerate(applist):
+        if index < last_index:
+            continue
         try:
             res = requests.get('http://store.steampowered.com/api/appdetails?appids='+str(items['appid']))
 
