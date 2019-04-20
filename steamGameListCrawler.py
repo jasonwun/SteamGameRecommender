@@ -4,6 +4,7 @@ import time
 import requests
 import json
 import logging
+import sys
 log = logging.getLogger('GameListCrawler')
 hdlr = logging.FileHandler('logGameListCrawler.log')
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
@@ -11,12 +12,15 @@ hdlr.setFormatter(formatter)
 log.addHandler(hdlr) 
 log.setLevel(logging.INFO)
 
-with open ('gamelist.json', 'w') as f:
-    #with open ('logGameList.log', 'w') as log:
-        #app list
-        res = requests.get('http://api.steampowered.com/ISteamApps/GetAppList/v2')
-        applist = res.json()['applist']['apps']
-        for index,items in enumerate(applist):
+with open ('gamelist.json', 'a') as f:
+    #app list
+    res = requests.get('http://api.steampowered.com/ISteamApps/GetAppList/v2')
+    applist = res.json()['applist']['apps']
+    with open ('applist.json', 'w') as fapps:
+        json.dump(applist, fapps, indent = 2)
+
+    for index,items in enumerate(applist):
+        try:
             res = requests.get('http://store.steampowered.com/api/appdetails?appids='+str(items['appid']))
 
             #sleep until request rate is low enough
@@ -31,4 +35,6 @@ with open ('gamelist.json', 'w') as f:
             if (appDetails['success'] == False):
                 continue
             json.dump(appDetails['data'], f, indent = 2)
-        log.info('Program ends at ' + str(time.time()) + '\n')
+        except:
+            e = sys.exc_info()[0]
+            log.error("exception found at index: " + str(index) + ", appid: " + str(items['appid']) + ", error: "  + str(e) + "\n")
