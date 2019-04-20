@@ -4,7 +4,6 @@ import time
 import requests
 import json
 
-api = WebAPI(key="D2C78C484D8A9EC812B18BD2E24EE228")
 
 with open ('gamelist.json', 'w') as f:
     #app list
