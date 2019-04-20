@@ -1,7 +1,6 @@
 # API website: https://steamapi.xpaw.me/#
 # iterate through game list and store them in json (for now)
 import time
-from steam import *
 import requests
 import json
 
