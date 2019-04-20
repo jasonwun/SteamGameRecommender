@@ -9,7 +9,7 @@ with open ('gamelist.json', 'w') as f:
     #app list
     res = requests.get('http://api.steampowered.com/ISteamApps/GetAppList/v2')
     applist = res.json()['applist']['apps']
-    for items in applist:
+    for index,items in enumerate(applist):
         print(items['appid'])
         res = requests.get('http://store.steampowered.com/api/appdetails?appids='+str(items['appid']))
 
@@ -21,8 +21,8 @@ with open ('gamelist.json', 'w') as f:
             
         resj = res.json()
         appDetails = resj[str(items['appid'])]
-        print(appDetails['success'])
+        print(str(float(index)/float(len(applist))*100) + '  done')
         if (appDetails['success'] == False):
             continue
-        json.dump(appDetails['data'], f, ensure_ascii=False)
+        json.dump(appDetails['data'], f, indent = 2)
         
