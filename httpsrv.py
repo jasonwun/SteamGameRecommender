@@ -11,6 +11,10 @@ Send a POST request::
     curl -d "foo=bar&bin=baz" http://localhost
 """
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from multiprocessing import Process
+def sparkTODO(steamid):
+    return str(steamid) + "sparkoutput"
+
 
 class S(BaseHTTPRequestHandler):
     def _set_headers(self):
@@ -29,8 +33,10 @@ class S(BaseHTTPRequestHandler):
         # Doesn't do anything with posted data
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
+        output = sparkTODO(post_data)
+
         self._set_headers()
-        self.wfile.write("<html><body><h1>POST!</h1></body></html>" + str(post_data))
+        self.wfile.write(("<html><body><h1>POST!</h1></body></html>" + str(output)).encode('utf-8'))
 
 def run(server_class=HTTPServer, handler_class=S, port=8001):
     server_address = ('', port)
