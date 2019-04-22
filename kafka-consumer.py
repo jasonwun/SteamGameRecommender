@@ -1,9 +1,11 @@
+
+
 from kafka import KafkaConsumer
 
 # To consume latest messages and auto-commit offsets
 consumer = KafkaConsumer('my-topic',
                          group_id='my-group',
-                         bootstrap_servers=['localhost:9092'])
+                         bootstrap_servers=['compute-1-1.local:9092'])
 for message in consumer:
     # message value and key are raw bytes -- decode if necessary!
     # e.g., for unicode: `message.value.decode('utf-8')`
@@ -35,3 +37,5 @@ consumer1 = KafkaConsumer('my-topic',
 consumer2 = KafkaConsumer('my-topic',
                           group_id='my-group',
                           bootstrap_servers='my.server.com')
+
+

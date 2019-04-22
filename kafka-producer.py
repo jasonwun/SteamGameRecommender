@@ -1,9 +1,8 @@
 # Reference: https://kafka-python.readthedocs.io/en/master/usage.html
-
 from kafka import KafkaProducer
 from kafka.errors import KafkaError
 
-producer = KafkaProducer(bootstrap_servers=['broker1:1234'])
+producer = KafkaProducer(bootstrap_servers=['compute-1-1.local:9092'])
 
 # Asynchronous by default
 future = producer.send('my-topic', b'raw_bytes')
@@ -24,13 +23,7 @@ print (record_metadata.offset)
 # produce keyed messages to enable hashed partitioning
 producer.send('my-topic', key=b'foo', value=b'bar')
 
-# encode objects via msgpack
-producer = KafkaProducer(value_serializer=msgpack.dumps)
-producer.send('msgpack-topic', {'key': 'value'})
 
-# produce json messages
-producer = KafkaProducer(value_serializer=lambda m: json.dumps(m).encode('ascii'))
-producer.send('json-topic', {'key': 'value'})
 
 # produce asynchronously
 for _ in range(100):
@@ -51,5 +44,3 @@ producer.send('my-topic', b'raw_bytes').add_callback(on_send_success).add_errbac
 # block until all async messages are sent
 producer.flush()
 
-# configure multiple retries
-producer = KafkaProducer(retries=5)
