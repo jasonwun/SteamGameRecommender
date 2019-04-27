@@ -31,15 +31,21 @@ def getGameDetails(index, items):
 
 while (True):
     #app list
-    res = requests.get('http://api.steampowered.com/ISteamApps/GetAppList/v2')
-    applist = res.json()['applist']['apps']
-    with open ('newapplist.json', 'w') as fapps:
-        json.dump(applist, fapps, indent = 2)
-    #latest app list is still the same as the last one, no need to re-pull game data
-    #if (filecmp.cmp('newapplist.json', 'applist.json') == True):
-    #    continue
-    with open ('applist.json', 'w') as fapps:
-        json.dump(applist, fapps, indent = 2)
+    # res = requests.get('http://api.steampowered.com/ISteamApps/GetAppList/v2')
+    # applist = res.json()['applist']['apps']
+    # with open ('newapplist.json', 'w') as fapps:
+    #     json.dump(applist, fapps, indent = 2)
+    # #latest app list is still the same as the last one, no need to re-pull game data
+    # #if (filecmp.cmp('newapplist.json', 'applist.json') == True):
+    # #    continue
+    # with open ('applist.json', 'w') as fapps:
+    #     json.dump(applist, fapps, indent = 2)
+
+    # load from file instead
+    with open ('newapplist.json', 'r+') as fapps:
+        applist = json.load(fapps)
+
+
     with open ('completeGameData.json', 'w') as f:
     #    for index, items in enumerate(applist):
     #        if items['appid'] == last_appid:
@@ -52,11 +58,12 @@ while (True):
                     resj = res.json()
                     appDetails = resj[str(applist[i]['appid'])]
                     if (appDetails['success'] == False):
-                        log.info("appdetails[success] equals false for appid:" + str(applist[i]['appid']) + '\n')
+                        log.info("appdetails[success] equals false, appid:" + str(applist[i]['appid']) + ', retries: ' + str(retries) + '\n')
                         retries = retries + 1
                         #retry
                         continue
                     resstring = json.dumps(appDetails['data'])
+                    
                     f.write(resstring)
                     f.write('\n')
                     log.info("current appid:" + str(applist[i]['appid']) + ' Progress:' + str(float(i)/float(len(applist))*100) + '  done\n')
