@@ -11,19 +11,19 @@ vanityurl = "HongyuDing"
 res = api.call('ISteamUser.ResolveVanityURL', vanityurl=vanityurl)
 steamID = res['response']['steamid']
 
-appid=814380
-#achievement is friend-only by default
-achievement = api.call('ISteamUserStats.GetPlayerAchievements', steamid=steamID, appid=appid)
+appid=402480
+# #achievement is friend-only by default
+# achievement = api.call('ISteamUserStats.GetPlayerAchievements', steamid=steamID, appid=appid)
 
-playerCount = api.call('ISteamUserStats.GetNumberOfCurrentPlayers', appid=appid)
+# playerCount = api.call('ISteamUserStats.GetNumberOfCurrentPlayers', appid=appid)
 
-achievementsPercentage = api.call('ISteamUserStats.GetGlobalAchievementPercentagesForApp', gameid=appid)
+# achievementsPercentage = api.call('ISteamUserStats.GetGlobalAchievementPercentagesForApp', gameid=appid)
 
-OwnedGames = api.call('IPlayerService.GetOwnedGames', steamid=steamID, include_appinfo=False, include_played_free_games=True, appids_filter=0)
+# OwnedGames = api.call('IPlayerService.GetOwnedGames', steamid=steamID, include_appinfo=False, include_played_free_games=True, appids_filter=0)
 
-friendList = api.call('ISteamUser.GetFriendList', steamid=steamID)
+# friendList = api.call('ISteamUser.GetFriendList', steamid=steamID)
 
-playerSummary = api.call('ISteamUser.GetPlayerSummaries', steamids=steamID)
+# playerSummary = api.call('ISteamUser.GetPlayerSummaries', steamids=steamID)
 
 
 
