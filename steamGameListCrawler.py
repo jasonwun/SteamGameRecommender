@@ -63,7 +63,8 @@ while (True):
                         #retry
                         continue
                     resstring = json.dumps(appDetails['data'])
-                    
+                    resstring = resstring.replace('\r', ' ')
+                    resstring = resstring.replace('\n', ' ')
                     f.write(resstring)
                     f.write('\n')
                     log.info("current appid:" + str(applist[i]['appid']) + ' Progress:' + str(float(i)/float(len(applist))*100) + '  done\n')
