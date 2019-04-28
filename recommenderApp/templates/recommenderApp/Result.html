@@ -1,0 +1,22 @@
+<h2>Here's your recommendation provided by leading edge artificial intelligence</h1>
+
+<h3>{{userName}}</h3>
+<h3>{{steamId}}</h3>
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>SteamUrl</th>
+        <th>Publisher</th>
+    </tr>
+    {% for r in data %}
+        <tr>
+            <td>{{ r.name }}</td>
+            <td>{{ r.short_description }}</td>
+            <td><a href="https://store.steampowered.com/app/{{ r.steam_appid }}/">Visit Steam</a></td>
+            <td>{{ r.publishers|join:', ' }}</td>
+        </tr>
+        <br>
+    {% endfor %}
+</table>

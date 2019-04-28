@@ -1,0 +1,7 @@
+<h1>Please enter your UserName on Steam</h1>
+
+<form action="{% url 'recommenderApp:submit' %}" method="POST">
+    {% csrf_token %}
+    <input type="text" name="UserName" id="userName"/>
+    <input type="submit" value="Submit"/>
+</form>
