@@ -1,2 +1,7 @@
 gamelist.json
 gamelist.txt
+
+FrontEnd/*.pyc
+FrontEnd/Recommendation/*.pyc
+FrontEnd/recommenderApp/*.pyc
+*.pyc
