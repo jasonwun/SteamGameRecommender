@@ -31,10 +31,10 @@ def getGameDetails(index, items):
 
 while (True):
     #app list
-    # res = requests.get('http://api.steampowered.com/ISteamApps/GetAppList/v2')
-    # applist = res.json()['applist']['apps']
-    # with open ('newapplist.json', 'w') as fapps:
-    #     json.dump(applist, fapps, indent = 2)
+    res = requests.get('http://api.steampowered.com/ISteamApps/GetAppList/v2')
+    applist = res.json()['applist']['apps']
+    with open ('newapplist.json', 'w') as fapps:
+        json.dump(applist, fapps, indent = 2)
     # #latest app list is still the same as the last one, no need to re-pull game data
     # #if (filecmp.cmp('newapplist.json', 'applist.json') == True):
     # #    continue
@@ -42,8 +42,8 @@ while (True):
     #     json.dump(applist, fapps, indent = 2)
 
     # load from file instead
-    with open ('newapplist.json', 'r+') as fapps:
-        applist = json.load(fapps)
+    #with open ('newapplist.json', 'r+') as fapps:
+    #    applist = json.load(fapps)
 
 
     with open ('completeGameData.json', 'w') as f:
@@ -52,7 +52,7 @@ while (True):
     #            last_index = index
         retries = 0
         for i in range(0, len(applist) - 1):
-            while (retries <= 30):
+            while (retries <= 1):
                 try:
                     res = getGameDetails(i, applist[i])
                     resj = res.json()
