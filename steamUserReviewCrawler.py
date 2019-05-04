@@ -1,5 +1,3 @@
-# API website: https://steamapi.xpaw.me/#
-# iterate through game list and store them in json (for now)
 import time
 import requests
 import json
@@ -7,36 +5,36 @@ import logging
 import sys
 import os
 import filecmp
-log = logging.getLogger('GameListCrawler')
-hdlr = logging.FileHandler('logGameListCrawler.log')
+
+
+log = logging.getLogger('UserReviewCrawler')
+hdlr = logging.FileHandler('logUserReviewCrawler.log')
 formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)
 log.addHandler(hdlr) 
 log.setLevel(logging.INFO)
 
+
 #parameters
 autoUpdate = False
 loadFromFile = True
-#check point
-#last_appid = 355100
-#last_index = -1
 
-
-
-def getGameDetails(index, items):
-
-        res = requests.get('http://store.steampowered.com/api/appdetails?appids='+str(items['appid']))
+def getUserReviews(index, items):
+        res = requests.get('https://store.steampowered.com/appreviews/'+str(items['appid'])+'?json=1&language=all&purchase_type=all')
         #sleep until request rate is low enough
         while res.reason == 'Too Many Requests':
             log.info('rate limit exceeded\n')
             time.sleep(60) #sleep for 60 sec and then request again
             res = requests.get('http://store.steampowered.com/api/appdetails?appids='+str(items['appid']))
-        
         return res
+
+
+
 
 while (True):
     #app list
-    # load from file
+
+    # load from file instead
     if (loadFromFile == True):
         with open ('newapplist.json', 'r+') as fapps:
             applist = json.load(fapps)
@@ -52,7 +50,9 @@ while (True):
             with open ('applist.json', 'w') as fapps:
                 json.dump(applist, fapps, indent = 2)
 
-    with open ('completeGameData.json', 'w') as f:
+
+
+    with open ('userReviews.json', 'w') as f:
     #    for index, items in enumerate(applist):
     #        if items['appid'] == last_appid:
     #            last_index = index
@@ -60,47 +60,27 @@ while (True):
         for i in range(0, len(applist) - 1):
             while (retries <= 1):
                 try:
-                    res = getGameDetails(i, applist[i])
+                    res = getUserReviews(i, applist[i])
                     resj = res.json()
-                    appDetails = resj[str(applist[i]['appid'])]
-                    if (appDetails['success'] == False):
-                        log.info("appdetails[success] equals false, appid:" + str(applist[i]['appid']) + ', retries: ' + str(retries) + '\n')
-                        retries = retries + 1
-                        #retry
-                        continue
-                    resstring = json.dumps(appDetails['data'])
-                    resstring = resstring.replace('\r', ' ')
-                    resstring = resstring.replace('\n', ' ')
+                    summary = resj['query_summary']
+                    summary['appid'] = applist[i]['appid']
+                    resstring = json.dumps(summary)
+
                     f.write(resstring)
                     f.write('\n')
-                    log.info("current appid:" + str(applist[i]['appid']) + ' Progress:' + str(float(i)/float(len(applist))*100) + '  done\n')
+                    log.info("Querying reviews: Current appid:" + str(applist[i]['appid']) + ' Progress:' + str(float(i)/float(len(applist))*100) + '  done\n')
                     retries = 0 #sucess, reset retry
                     break
                 except:
                     e = sys.exc_info()[0]
-                    log.error("exception found at index: " + str(i) + ", appid: " + str(applist[i]['appid']) + ", error: "  + str(e) + "\n")
+                    log.error("Querying reviews: Exception found at index: " + str(i) + ", appid: " + str(applist[i]['appid']) + ", error: "  + str(e) + "\n")
                     retries = retries + 1
                     #retry 
                     continue
             retries = 0
     #        if index < last_index:
     #            continue
-    break
+    if (autoUpdate == False):
+        break
     time.sleep(64800) #sleep one day and check applist again
 
-    # add '[' at the start of file 
-    # add ']' at the end of file 
-    
-    # with open("tmp.json", 'r+') as f:
-    #     with open("completeGameData.json", 'w+') as output:
-    #         output.write('[')
-    #         lines = f.readlines()
-    #         for i in range (0, len(lines)):
-    #             # if (lines[i] == '}{\n'):
-    #             #     lines[i] = '},{\n'
-    #             # else:
-    #             #     lines[i] = lines[i].replace('\n', ' ')
-    #             output.write(lines[i])
-    #         output.write(']')
-
-    # os.remove("tmp.json")
