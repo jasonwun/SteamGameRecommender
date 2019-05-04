@@ -14,9 +14,14 @@ hdlr.setFormatter(formatter)
 log.addHandler(hdlr) 
 log.setLevel(logging.INFO)
 
+#parameters
+autoUpdate = False
+loadFromFile = True
 #check point
 #last_appid = 355100
 #last_index = -1
+
+
 
 def getGameDetails(index, items):
 
@@ -31,20 +36,21 @@ def getGameDetails(index, items):
 
 while (True):
     #app list
-    res = requests.get('http://api.steampowered.com/ISteamApps/GetAppList/v2')
-    applist = res.json()['applist']['apps']
-    with open ('newapplist.json', 'w') as fapps:
-        json.dump(applist, fapps, indent = 2)
-    # #latest app list is still the same as the last one, no need to re-pull game data
-    # #if (filecmp.cmp('newapplist.json', 'applist.json') == True):
-    # #    continue
-    # with open ('applist.json', 'w') as fapps:
-    #     json.dump(applist, fapps, indent = 2)
-
-    # load from file instead
-    #with open ('newapplist.json', 'r+') as fapps:
-    #    applist = json.load(fapps)
-
+    # load from file
+    if (loadFromFile == True):
+        with open ('newapplist.json', 'r+') as fapps:
+            applist = json.load(fapps)
+    else:
+        res = requests.get('http://api.steampowered.com/ISteamApps/GetAppList/v2')
+        applist = res.json()['applist']['apps']
+        with open ('newapplist.json', 'w') as fapps:
+            json.dump(applist, fapps, indent = 2)
+        # #latest app list is still the same as the last one, no need to re-pull game data
+        if (autoUpdate == True):
+            if (filecmp.cmp('newapplist.json', 'applist.json') == True):
+                continue
+            with open ('applist.json', 'w') as fapps:
+                json.dump(applist, fapps, indent = 2)
 
     with open ('completeGameData.json', 'w') as f:
     #    for index, items in enumerate(applist):
@@ -79,6 +85,7 @@ while (True):
             retries = 0
     #        if index < last_index:
     #            continue
+    break
     time.sleep(64800) #sleep one day and check applist again
 
     # add '[' at the start of file 
