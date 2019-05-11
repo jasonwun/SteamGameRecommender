@@ -1,3 +1,5 @@
+import findspark
+findspark.init('/share/apps/spark/spark-2.1.0-bin-hadoop2.6')
 from pyspark import SparkContext, SparkConf
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as f
@@ -10,7 +12,7 @@ from pyspark.ml.feature import CountVectorizer
 
 if __name__ == "__main__":
 	print("start")
-	spark = SparkSession.builder.appName('clean data').getOrCreate()
+	spark = SparkSession.builder.config("spark.executor.memory", "70g").config("spark.driver.memory", "50g").config("spark.memory.offHeap.enabled",True).config("spark.memory.offHeap.size","16g").appName('clean data').getOrCreate()
 
 	Path = "FinalProject/game_list.json"
 	df = spark.read.json(Path)
