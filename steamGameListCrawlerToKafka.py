@@ -79,7 +79,8 @@ while (True):
                     f.write(resstring)
                     f.write('\n')
                     # Asynchronous by default
-                    future = producer.send('my-topic', resstring)
+                    print("sending to kafka")
+                    future = producer.send('my-topic', resstring.encode('utf-8'))
 
                     # Block for 'synchronous' sends
                     try:
