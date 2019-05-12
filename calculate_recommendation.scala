@@ -7,13 +7,7 @@ import org.apache.spark.sql.functions._
 val path = "FinalProject/Game_vector/*"
 val df = spark.read.parquet(path)
 val isNoneZeroVector = udf({v: Vector => v.numNonzeros > 0}, DataTypes.BooleanType)
-val new_df = df.filter(isNoneZeroVector(col("feature_developers")))
-               .filter(isNoneZeroVector(col("feature_publishers")))
-               .filter(isNoneZeroVector(col("feature_description")))
-               .filter(isNoneZeroVector(col("feature_about_the_game")))
-               .filter(isNoneZeroVector(col("feature_device_requirements")))
-               .filter(isNoneZeroVector(col("feature_geners")))
-               .filter(isNoneZeroVector(col("feature_categories")))
+val new_df = df.filter(isNoneZeroVector(col("feature_developers"))).filter(isNoneZeroVector(col("feature_publishers"))).filter(isNoneZeroVector(col("feature_description"))).filter(isNoneZeroVector(col("feature_about_the_game"))).filter(isNoneZeroVector(col("feature_device_requirements"))).filter(isNoneZeroVector(col("feature_geners"))).filter(isNoneZeroVector(col("feature_categories")))
 
 //calculate feature_developers distance 
 //calculate feature_publishers distance
@@ -58,6 +52,7 @@ val device_df = model_device_requirements.approxNearestNeighbors(geners_df, devi
 val id_list = new_df.select("steam_appid").collect()
 
 new_df.createOrReplaceTempView("game_list")
+val sqlContext = new org.apache.spark.sql.SQLContext(sc);
 for (id <- id_list) {
     print(id)
     val string_id = id.toString.dropRight(1).substring(1)
