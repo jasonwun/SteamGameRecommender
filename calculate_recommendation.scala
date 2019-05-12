@@ -84,7 +84,7 @@ for (id <- id_list) {
     
     val new_description_df = description_df.select("steam_appid", "name", "header_image", "distCol")
     val new_about_the_game_df = about_the_game_df.select("steam_appid", "name", "header_image", "distCol")
-    val new_device_df = device_df.select("steam_appid", "header_image", "name", "distCol")
+    val new_device_df = device_df.select("steam_appid", "name", "header_image", "distCol")
 
     val temp = new_description_df.union(new_about_the_game_df)
     val temp2 = temp.union(new_device_df)
@@ -92,6 +92,6 @@ for (id <- id_list) {
     val recommand_20 = recommand_df.limit(20)
     //recommand_20.show()
     val file_name = "FinalProject/Recommandation/" + string_id
-    recommand_20.write.mode("overwrite").parquet(file_name)
+    recommand_20.write.mode("overwrite").json(file_name)
 }
 System.exit(0)
