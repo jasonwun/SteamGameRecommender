@@ -99,3 +99,4 @@ for (id <- id_list) {
     val file_name = "FinalProject/Recommandation/" + string_id
     recommand_20.write.mode("overwrite").parquet(file_name)
 }
+System.exit(0)
