@@ -65,14 +65,25 @@ class CustomHandler(BaseHTTPRequestHandler):
         print(gameIds)
         head = 5
         for i in gameIds:
-            cat = subprocess.Popen(["hadoop", "fs", "-cat", "FinalProject/Recommendation/" + i + "/* | -head " + str(head)], stdout=subprocess.PIPE)
-            for line in cat:
-                dump = json.dumps(line)
-                html_raw = html_raw + "<tr><td>" + dump["name"] + "</td>" + "<td><img width=\"200\" height=\"200\" src=\"" + dump["header_image"] + "\"></td>" + "<td><a href=\"https://store.steampowered.com/app/" + dump["steam_appid"] + "\">Visit Steam</a></td>"
+            print("processing appid: " + str(i))
+            cat = subprocess.Popen(["hadoop", "fs", "-cat", "FinalProject/Recommandation/" + str(i) + "/*"], stdout=subprocess.PIPE)
+            out = cat.stdout
+            count = 0
+            print("cat out: " + str(out))
+            for line in out:
+                if count > head:
+                    break
+                print("type of line: " + str(type(line)))
+                dump = json.loads(line)
+                print("dump: " + str(dump))
+                html_raw = str(html_raw) + "<tr><td>" + dump["name"].encode("utf-8") + "</td>" + "<td><img width=\"200\" height=\"200\" src=\"" + dump["header_image"].encode("utf-8") + "\"></td>" + "<td><a href=\"https://store.steampowered.com/app/" + str(dump["steam_appid"]) + "\">Visit Steam</a></td></tr>"
+                count += 1
         self._set_headers()
+        html_raw = html_raw + "</table>"
         #with open('Result.html', 'r') as content_file:
         #    content = content_file.read().encode('utf-8')
-        self.wfile.write(html_raw.encode('utf-8'))
+        
+        self.wfile.write(html_raw)
     
 
 
@@ -89,7 +100,7 @@ if sys.argv[1:]:
         interface = '0.0.0.0'
         port = int(address)
 else:
-    port = 8001
+    port = 8002
     interface = '0.0.0.0'
 
 if sys.argv[2:]:
