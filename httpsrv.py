@@ -61,21 +61,23 @@ class CustomHandler(BaseHTTPRequestHandler):
         sleep(5)
         print(gameResult)
 
-        gameIds = [i["appid"] for i in gameResult]
+        gameIds = sorted([(i["appid"], i['playtime_forever']) for i in gameResult], key=lambda x : x[1], reversed=True)
+
         print(gameIds)
-        head = 5
-        for i in gameIds:
-            print("processing appid: " + str(i))
-            cat = subprocess.Popen(["hadoop", "fs", "-cat", "FinalProject/Recommandation/" + str(i) + "/*"], stdout=subprocess.PIPE)
+        head = 10
+        for index, value in enumerate(gameIds): #value is a tuple
+            print("processing appid: " + str(value[0]))
+            cat = subprocess.Popen(["hadoop", "fs", "-cat", "FinalProject/Recommandation/" + str(value[0]) + "/*"], stdout=subprocess.PIPE)
             out = cat.stdout
             count = 0
             print("cat out: " + str(out))
             for line in out:
-                if count > head:
+                if count > head - index:
+                    print("grabbing data for index: " + str(index) + "th game")
                     break
-                print("type of line: " + str(type(line)))
+                #print("type of line: " + str(type(line)))
                 dump = json.loads(line)
-                print("dump: " + str(dump))
+                #print("dump: " + str(dump))
                 html_raw = str(html_raw) + "<tr><td>" + dump["name"].encode("utf-8") + "</td>" + "<td><img width=\"200\" height=\"200\" src=\"" + dump["header_image"].encode("utf-8") + "\"></td>" + "<td><a href=\"https://store.steampowered.com/app/" + str(dump["steam_appid"]) + "\">Visit Steam</a></td></tr>"
                 count += 1
         self._set_headers()
