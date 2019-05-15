@@ -78,7 +78,7 @@ class CustomHandler(BaseHTTPRequestHandler):
                 #print("type of line: " + str(type(line)))
                 dump = json.loads(line)
                 #print("dump: " + str(dump))
-                html_raw = str(html_raw) + "<tr><td>" + dump["name"].encode("utf-8") + "</td>" + "<td><img width=\"200\" height=\"200\" src=\"" + dump["header_image"].encode("utf-8") + "\"></td>" + "<td><a href=\"https://store.steampowered.com/app/" + str(dump["steam_appid"]) + "\">Visit Steam</a></td></tr>"
+                html_raw = str(html_raw) + "<tr><td>" + dump["name"].encode("utf-8") + "</td>" + "<td><img width=\"300\" src=\"" + dump["header_image"].encode("utf-8") + "\"></td>" + "<td><a href=\"https://store.steampowered.com/app/" + str(dump["steam_appid"]) + "\">Visit Steam</a></td></tr>"
                 count += 1
         self._set_headers()
         html_raw = html_raw + "</table>"
