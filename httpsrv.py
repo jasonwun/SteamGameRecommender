@@ -61,7 +61,7 @@ class CustomHandler(BaseHTTPRequestHandler):
         sleep(5)
         print(gameResult)
 
-        gameIds = sorted([(i["appid"], i['playtime_forever']) for i in gameResult], key=lambda x : x[1], reverse=True)[:10]
+        gameIds = sorted([(i["appid"], i['playtime_forever']) for i in gameResult], key=lambda x : x[1], reverse=True)[:5]
 
         print(gameIds)
         head = 10
