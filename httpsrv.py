@@ -58,7 +58,7 @@ class CustomHandler(BaseHTTPRequestHandler):
         print(res["response"]["steamid"])
         steamID = res["response"]["steamid"]
         gameResult = api.call('IPlayerService.GetOwnedGames', steamid=steamID, include_appinfo=False, include_played_free_games=True, appids_filter=0)["response"]["games"]
-        sleep(5)
+        #sleep(5)
         print(gameResult)
 
         gameIds = sorted([(i["appid"], i['playtime_forever']) for i in gameResult], key=lambda x : x[1], reverse=True)[:5]
